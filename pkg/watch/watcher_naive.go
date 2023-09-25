@@ -261,7 +261,7 @@ func (d *naiveNotify) shouldSkipDir(path string) (bool, error) {
 
 	skip, err := d.ignore.MatchesEntireDir(path)
 	if err != nil {
-		return false, errors.Wrap(err, "shouldSkipDir")
+		return false, fmt.Errorf("shouldSkipDir: %w", err)
 	}
 
 	if skip {
