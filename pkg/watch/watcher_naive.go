@@ -20,6 +20,7 @@
 package watch
 
 import (
+	"errors"
 	"fmt"
 	"io/fs"
 	"os"
@@ -27,7 +28,6 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 
 	"github.com/tilt-dev/fsnotify"
@@ -78,7 +78,7 @@ func (d *naiveNotify) Start() error {
 	for _, name := range pathsToWatch {
 		fi, err := os.Stat(name)
 		if err != nil && !os.IsNotExist(err) {
-			return errors.Wrapf(err, "notify.Add(%q)", name)
+			return fmt.Errorf("notify.Add(%q): %w", name, err)
 		}
 
 		// if it's a file that doesn't exist,
@@ -90,12 +90,12 @@ func (d *naiveNotify) Start() error {
 		if fi.IsDir() {
 			err = d.watchRecursively(name)
 			if err != nil {
-				return errors.Wrapf(err, "notify.Add(%q)", name)
+				return fmt.Errorf("notify.Add(%q): %w", name, err)
 			}
 		} else {
 			err = d.add(filepath.Dir(name))
 			if err != nil {
-				return errors.Wrapf(err, "notify.Add(%q)", filepath.Dir(name))
+				return fmt.Errorf("notify.Add(%q): %w", filepath.Dir(name), err)
 			}
 		}
 	}
@@ -111,7 +111,7 @@ func (d *naiveNotify) watchRecursively(dir string) error {
 		if err == nil || os.IsNotExist(err) {
 			return nil
 		}
-		return errors.Wrapf(err, "watcher.Add(%q)", dir)
+		return fmt.Errorf("watcher.Add(%q): %w", dir, err)
 	}
 
 	return filepath.WalkDir(dir, func(path string, info fs.DirEntry, err error) error {
@@ -138,7 +138,7 @@ func (d *naiveNotify) watchRecursively(dir string) error {
 			if os.IsNotExist(err) {
 				return nil
 			}
-			return errors.Wrapf(err, "watcher.Add(%q)", path)
+			return fmt.Errorf("watcher.Add(%q): %w", path, err)
 		}
 		return nil
 	})
@@ -311,7 +311,7 @@ func newWatcher(paths []string, ignore PathMatcher) (Notify, error) {
 				"Run 'sysctl fs.inotify.max_user_instances' to check your inotify limits.\n" +
 				"To raise them, run 'sudo sysctl fs.inotify.max_user_instances=1024'")
 		}
-		return nil, errors.Wrap(err, "creating file watcher")
+		return nil, fmt.Errorf("creating file watcher: %w", err)
 	}
 	MaybeIncreaseBufferSize(fsw)
 
@@ -326,7 +326,7 @@ func newWatcher(paths []string, ignore PathMatcher) (Notify, error) {
 	for _, path := range paths {
 		path, err := filepath.Abs(path)
 		if err != nil {
-			return nil, errors.Wrap(err, "newWatcher")
+			return nil, fmt.Errorf("newWatcher: %w", err)
 		}
 		notifyList[path] = true
 	}
