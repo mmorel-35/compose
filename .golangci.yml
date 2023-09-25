@@ -41,6 +41,11 @@ linters-settings:
             desc: 'compose-go uses yaml.v3'
   gomodguard:
     blocked:
+      modules:
+        - github.com/pkg/errors:
+            recommendations:
+              - errors
+              - fmt
       versions:
         - github.com/distribution/distribution:
             reason: "use distribution/reference"
