@@ -345,17 +345,17 @@ func parseSecurityOpts(p *types.Project, securityOpts []string) ([]string, bool,
 			if strings.Contains(opt, ":") {
 				con = strings.SplitN(opt, ":", 2)
 			} else {
-				return securityOpts, false, errors.Errorf("Invalid security-opt: %q", opt)
+				return securityOpts, false, fmt.Errorf("Invalid security-opt: %q", opt)
 			}
 		}
 		if con[0] == "seccomp" && con[1] != "unconfined" {
 			f, err := os.ReadFile(p.RelativePath(con[1]))
 			if err != nil {
-				return securityOpts, false, errors.Errorf("opening seccomp profile (%s) failed: %v", con[1], err)
+				return securityOpts, false, fmt.Errorf("opening seccomp profile (%s) failed: %v", con[1], err)
 			}
 			b := bytes.NewBuffer(nil)
 			if err := json.Compact(b, f); err != nil {
-				return securityOpts, false, errors.Errorf("compacting json for seccomp profile (%s) failed: %v", con[1], err)
+				return securityOpts, false, fmt.Errorf("compacting json for seccomp profile (%s) failed: %v", con[1], err)
 			}
 			parsed = append(parsed, fmt.Sprintf("seccomp=%s", b.Bytes()))
 		} else {
@@ -1111,7 +1111,7 @@ func (s *composeService) resolveOrCreateNetwork(ctx context.Context, n *types.Ne
 	_, err = s.apiClient().NetworkCreate(ctx, n.Name, createOpts)
 	if err != nil {
 		w.Event(progress.ErrorEvent(networkEventName))
-		return errors.Wrapf(err, "failed to create network %s", n.Name)
+		return fmt.Errorf("failed to create network %s: %w", n.Name, err)
 	}
 	w.Event(progress.CreatedEvent(networkEventName))
 	return nil
