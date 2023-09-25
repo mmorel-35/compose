@@ -64,19 +64,19 @@ func (s *composeService) doBuildClassic(ctx context.Context, project *types.Proj
 	buildBuff := s.stdout()
 
 	if len(service.Build.Platforms) > 1 {
-		return "", errors.Errorf("the classic builder doesn't support multi-arch build, set DOCKER_BUILDKIT=1 to use BuildKit")
+		return "", fmt.Errorf("the classic builder doesn't support multi-arch build, set DOCKER_BUILDKIT=1 to use BuildKit")
 	}
 	if service.Build.Privileged {
-		return "", errors.Errorf("the classic builder doesn't support privileged mode, set DOCKER_BUILDKIT=1 to use BuildKit")
+		return "", fmt.Errorf("the classic builder doesn't support privileged mode, set DOCKER_BUILDKIT=1 to use BuildKit")
 	}
 	if len(service.Build.AdditionalContexts) > 0 {
-		return "", errors.Errorf("the classic builder doesn't support additional contexts, set DOCKER_BUILDKIT=1 to use BuildKit")
+		return "", fmt.Errorf("the classic builder doesn't support additional contexts, set DOCKER_BUILDKIT=1 to use BuildKit")
 	}
 	if len(service.Build.SSH) > 0 {
-		return "", errors.Errorf("the classic builder doesn't support SSH keys, set DOCKER_BUILDKIT=1 to use BuildKit")
+		return "", fmt.Errorf("the classic builder doesn't support SSH keys, set DOCKER_BUILDKIT=1 to use BuildKit")
 	}
 	if len(service.Build.Secrets) > 0 {
-		return "", errors.Errorf("the classic builder doesn't support secrets, set DOCKER_BUILDKIT=1 to use BuildKit")
+		return "", fmt.Errorf("the classic builder doesn't support secrets, set DOCKER_BUILDKIT=1 to use BuildKit")
 	}
 
 	if service.Build.Labels == nil {
@@ -100,11 +100,11 @@ func (s *composeService) doBuildClassic(ctx context.Context, project *types.Proj
 	case urlutil.IsURL(specifiedContext):
 		buildCtx, relDockerfile, err = build.GetContextFromURL(progBuff, specifiedContext, dockerfileName)
 	default:
-		return "", errors.Errorf("unable to prepare context: path %q not found", specifiedContext)
+		return "", fmt.Errorf("unable to prepare context: path %q not found", specifiedContext)
 	}
 
 	if err != nil {
-		return "", errors.Errorf("unable to prepare context: %s", err)
+		return "", fmt.Errorf("unable to prepare context: %s", err)
 	}
 
 	if tempDir != "" {
@@ -120,7 +120,7 @@ func (s *composeService) doBuildClassic(ctx context.Context, project *types.Proj
 		}
 
 		if err := build.ValidateContextDirectory(contextDir, excludes); err != nil {
-			return "", errors.Wrap(err, "checking context")
+			return "", fmt.Errorf("checking context: %w", err)
 		}
 
 		// And canonicalize dockerfile name to a platform-independent one
