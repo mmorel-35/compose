@@ -104,7 +104,7 @@ func (s *composeService) doBuildClassic(ctx context.Context, project *types.Proj
 	}
 
 	if err != nil {
-		return "", fmt.Errorf("unable to prepare context: %s", err)
+		return "", fmt.Errorf("unable to prepare context: %w", err)
 	}
 
 	if tempDir != "" {
