@@ -91,7 +91,7 @@ func (s *composeService) doBuildClassic(ctx context.Context, project *types.Proj
 			// Dockerfile is outside of build-context; read the Dockerfile and pass it as dockerfileCtx
 			dockerfileCtx, err = os.Open(dockerfileName)
 			if err != nil {
-				return "", errors.Errorf("unable to open Dockerfile: %v", err)
+				return "", fmt.Errorf("unable to open Dockerfile: %v", err)
 			}
 			defer dockerfileCtx.Close() //nolint:errcheck
 		}
