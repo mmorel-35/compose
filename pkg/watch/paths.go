@@ -17,12 +17,11 @@
 package watch
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
-
-	"github.com/pkg/errors"
 )
 
 func greatestExistingAncestor(path string) (string, error) {
