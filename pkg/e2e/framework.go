@@ -191,7 +191,7 @@ func findPluginExecutable(pluginExecutableName string) (string, error) {
 	if _, err := os.Stat(bin); err == nil {
 		return bin, nil
 	}
-	return "", fmt.Errorf("plugin not found %s: %w", pluginExecutableName, os.ErrNoExist))
+	return "", fmt.Errorf("plugin not found %s: %w", pluginExecutableName, os.ErrNotExist))
 }
 
 // CopyFile copies a file from a sourceFile to a destinationFile setting permissions to 0755
