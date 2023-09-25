@@ -20,7 +20,6 @@
 package watch
 
 import (
-	"errors"
 	"fmt"
 	"io/fs"
 	"os"
