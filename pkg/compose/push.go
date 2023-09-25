@@ -117,7 +117,7 @@ func (s *composeService) pushServiceImage(ctx context.Context, service types.Ser
 	for {
 		var jm jsonmessage.JSONMessage
 		if err := dec.Decode(&jm); err != nil {
-			if err == io.EOF {
+			if errors.Is(err, io.EOF) {
 				break
 			}
 			return err
