@@ -18,7 +18,7 @@ package compose
 
 import (
 	"context"
-	"errors" 
+	"errors"
 	"fmt"
 	"io"
 	"os"
