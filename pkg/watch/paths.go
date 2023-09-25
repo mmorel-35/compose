@@ -17,7 +17,6 @@
 package watch
 
 import (
-	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
