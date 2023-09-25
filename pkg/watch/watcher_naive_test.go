@@ -130,7 +130,7 @@ func inotifyNodes() (int, error) {
 
 	n, err := strconv.Atoi(strings.TrimSpace(string(output)))
 	if err != nil {
-		return 0, fmt.Errorf("couldn't parse number of watched files: %v", err)
+		return 0, fmt.Errorf("couldn't parse number of watched files: %w", err)
 	}
 	return n, nil
 }
