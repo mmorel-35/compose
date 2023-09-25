@@ -19,6 +19,7 @@ package compose
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -41,7 +42,6 @@ import (
 	"github.com/docker/docker/pkg/jsonmessage"
 	"github.com/docker/docker/pkg/progress"
 	"github.com/docker/docker/pkg/streamformatter"
-	"github.com/pkg/errors"
 
 	"github.com/docker/compose/v2/pkg/api"
 )
@@ -188,7 +188,8 @@ func (s *composeService) doBuildClassic(ctx context.Context, project *types.Proj
 
 	err = jsonmessage.DisplayJSONMessagesStream(response.Body, buildBuff, progBuff.FD(), true, aux)
 	if err != nil {
-		if jerr, ok := err.(*jsonmessage.JSONError); ok {
+		var jerr *jsonmessage.JSONError
+		if errors.As(err, &jerr) {
 			// If no error code is set, default to 1
 			if jerr.Code == 0 {
 				jerr.Code = 1
