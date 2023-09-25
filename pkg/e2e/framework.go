@@ -29,7 +29,6 @@ import (
 	"testing"
 	"time"
 
-	"github.com/pkg/errors"
 	"github.com/stretchr/testify/require"
 	"gotest.tools/v3/assert"
 	"gotest.tools/v3/icmd"
@@ -192,7 +191,7 @@ func findPluginExecutable(pluginExecutableName string) (string, error) {
 	if _, err := os.Stat(bin); err == nil {
 		return bin, nil
 	}
-	return "", errors.Wrap(os.ErrNotExist, fmt.Sprintf("plugin not found %s", pluginExecutableName))
+	return "", fmt.Errorf("plugin not found %s: %w", pluginExecutableName, os.ErrNoExist))
 }
 
 // CopyFile copies a file from a sourceFile to a destinationFile setting permissions to 0755
