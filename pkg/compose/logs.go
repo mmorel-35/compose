@@ -99,7 +99,8 @@ func (s *composeService) Logs(
 						Tail:       options.Tail,
 						Timestamps: options.Timestamps,
 					})
-					if _, ok := err.(errdefs.ErrNotImplemented); ok {
+					var notImplErr errdefs.ErrNotImplemented
+					if errors.As(err, &notImplErr) {
 						// ignore
 						return nil
 					}
