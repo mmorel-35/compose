@@ -20,6 +20,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"os"
 	"path"
@@ -38,7 +39,6 @@ import (
 	"github.com/docker/docker/errdefs"
 	"github.com/docker/go-connections/nat"
 	"github.com/docker/go-units"
-	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 
 	"github.com/compose-spec/compose-go/types"
