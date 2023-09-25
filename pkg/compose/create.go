@@ -350,11 +350,11 @@ func parseSecurityOpts(p *types.Project, securityOpts []string) ([]string, bool,
 		if con[0] == "seccomp" && con[1] != "unconfined" {
 			f, err := os.ReadFile(p.RelativePath(con[1]))
 			if err != nil {
-				return securityOpts, false, fmt.Errorf("opening seccomp profile (%s) failed: %v", con[1], err)
+				return securityOpts, false, fmt.Errorf("opening seccomp profile (%s) failed: %w", con[1], err)
 			}
 			b := bytes.NewBuffer(nil)
 			if err := json.Compact(b, f); err != nil {
-				return securityOpts, false, fmt.Errorf("compacting json for seccomp profile (%s) failed: %v", con[1], err)
+				return securityOpts, false, fmt.Errorf("compacting json for seccomp profile (%s) failed: %w", con[1], err)
 			}
 			parsed = append(parsed, fmt.Sprintf("seccomp=%s", b.Bytes()))
 		} else {
