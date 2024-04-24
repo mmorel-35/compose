@@ -81,7 +81,7 @@ func TestPs(t *testing.T) {
 			assert.Equal(t, projectName, service.Project)
 			publishers := service.Publishers
 			if service.Name == "e2e-ps-busybox-1" {
-				assert.Equal(t, 1, len(publishers))
+				assert.Len(t, publishers, 1)
 				assert.Equal(t, api.PortPublishers{
 					{
 						URL:           "127.0.0.1",
@@ -93,7 +93,7 @@ func TestPs(t *testing.T) {
 				count++
 			}
 			if service.Name == "e2e-ps-nginx-1" {
-				assert.Equal(t, 3, len(publishers))
+				assert.Len(t, publishers, 3)
 				assert.Equal(t, api.PortPublishers{
 					{TargetPort: 80, Protocol: "tcp"},
 					{TargetPort: 443, Protocol: "tcp"},
@@ -112,16 +112,16 @@ func TestPs(t *testing.T) {
 
 		res = c.RunDockerComposeCmd(t, "-f", "./fixtures/ps-test/compose.yaml", "--project-name", projectName, "ps")
 		lines := strings.Split(res.Stdout(), "\n")
-		assert.Equal(t, 2, len(lines))
+		assert.Len(t, lines, 2)
 
 		res = c.RunDockerComposeCmd(t, "-f", "./fixtures/ps-test/compose.yaml", "--project-name", projectName, "ps", "--all")
 		lines = strings.Split(res.Stdout(), "\n")
-		assert.Equal(t, 4, len(lines))
+		assert.Len(t, lines, 4)
 	})
 
 	t.Run("ps unknown", func(t *testing.T) {
 		res := c.RunDockerComposeCmd(t, "--project-name", projectName, "stop")
-		assert.NoError(t, res.Error)
+		require.NoError(t, res.Error)
 
 		res = c.RunDockerComposeCmd(t, "-f", "./fixtures/ps-test/compose.yaml", "--project-name", projectName, "ps", "nginx")
 		res.Assert(t, icmd.Success)
