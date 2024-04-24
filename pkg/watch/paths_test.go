@@ -28,7 +28,7 @@ func TestGreatestExistingAncestor(t *testing.T) {
 	f := NewTempDirFixture(t)
 
 	p, err := greatestExistingAncestor(f.Path())
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.Equal(t, f.Path(), p)
 
 	p, err = greatestExistingAncestor(f.JoinPath("missing"))
