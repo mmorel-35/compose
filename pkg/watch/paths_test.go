@@ -21,6 +21,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestGreatestExistingAncestor(t *testing.T) {
@@ -31,7 +32,7 @@ func TestGreatestExistingAncestor(t *testing.T) {
 	assert.Equal(t, f.Path(), p)
 
 	p, err = greatestExistingAncestor(f.JoinPath("missing"))
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.Equal(t, f.Path(), p)
 
 	missingTopLevel := "/missingDir/a/b/c"
