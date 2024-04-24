@@ -33,18 +33,17 @@ func TestPs(t *testing.T) {
 	const projectName = "e2e-ps"
 
 	res := c.RunDockerComposeCmd(t, "-f", "./fixtures/ps-test/compose.yaml", "--project-name", projectName, "up", "-d")
-	if assert.NoError(t, res.Error) {
-		t.Cleanup(func() {
-			_ = c.RunDockerComposeCmd(t, "--project-name", projectName, "down")
-		})
-	}
+	require.NoError(t, res.Error)
+	t.Cleanup(func() {
+		_ = c.RunDockerComposeCmd(t, "--project-name", projectName, "down")
+	})
 
 	assert.Contains(t, res.Combined(), "Container e2e-ps-busybox-1  Started", res.Combined())
 
 	t.Run("table", func(t *testing.T) {
 		res = c.RunDockerComposeCmd(t, "-f", "./fixtures/ps-test/compose.yaml", "--project-name", projectName, "ps")
 		lines := strings.Split(res.Stdout(), "\n")
-		assert.Equal(t, 4, len(lines))
+		assert.Len(t, lines, 4)
 		count := 0
 		for _, line := range lines[1:3] {
 			if strings.Contains(line, "e2e-ps-busybox-1") {
@@ -77,7 +76,7 @@ func TestPs(t *testing.T) {
 		}
 
 		count := 0
-		assert.Equal(t, 2, len(output))
+		assert.Len(t, output, 2)
 		for _, service := range output {
 			assert.Equal(t, projectName, service.Project)
 			publishers := service.Publishers
