@@ -108,7 +108,7 @@ func TestPs(t *testing.T) {
 
 	t.Run("ps --all", func(t *testing.T) {
 		res := c.RunDockerComposeCmd(t, "--project-name", projectName, "stop")
-		assert.NoError(t, res.Error)
+		require.NoError(t, res.Error)
 
 		res = c.RunDockerComposeCmd(t, "-f", "./fixtures/ps-test/compose.yaml", "--project-name", projectName, "ps")
 		lines := strings.Split(res.Stdout(), "\n")
